@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Importação — Vitrine Orlando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#070d1c;
+    --navy-900:#0c1730;
+    --navy-800:#142244;
+    --gold-400:#e8c468;
+    --gold-500:#cb9f3f;
+    --cream:#f7f1e3;
+    --ink:#e9ecf5;
+    --ink-dim:#9aa6c4;
+    --line: rgba(232,196,104,0.18);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background: radial-gradient(1100px 550px at 50% -10%, #112048 0%, var(--navy-950) 55%), var(--navy-950);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    padding:36px 16px 50px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .wrap{max-width:460px;width:100%;}
+
+  .brand{text-align:center;margin-bottom:6px;}
+  .brand .mark{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:26px;
+    letter-spacing:0.12em;
+    color:var(--gold-400);
+    text-transform:uppercase;
+  }
+  .rule{
+    width:90px;height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold-500), transparent);
+    margin:12px auto 22px;
+  }
+
+  h1.title{
+    font-family:'Playfair Display', serif;
+    font-size:21px;
+    font-weight:600;
+    text-align:center;
+    margin:0 0 8px;
+    color:var(--cream);
+    line-height:1.35;
+  }
+  p.tag{
+    text-align:center;
+    color:var(--ink-dim);
+    font-size:13.5px;
+    margin:0 0 28px;
+    line-height:1.5;
+  }
+
+  .card{
+    background:linear-gradient(160deg, var(--navy-900), var(--navy-800));
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px 22px;
+    margin-bottom:18px;
+    box-shadow:0 20px 50px -25px rgba(0,0,0,0.6);
+  }
+
+  .field{margin-bottom:18px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:block;
+    font-size:12.5px;
+    color:var(--ink-dim);
+    margin-bottom:7px;
+    letter-spacing:0.02em;
+  }
+  .input-wrap{
+    display:flex;
+    align-items:center;
+    background:var(--navy-950);
+    border:1px solid var(--line);
+    border-radius:11px;
+    transition:border-color .15s;
+  }
+  .input-wrap:focus-within{border-color:var(--gold-500);}
+  .input-wrap .prefix{
+    padding:0 0 0 14px;
+    color:var(--ink-dim);
+    font-size:14px;
+    font-weight:600;
+  }
+  .input-wrap input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--ink);
+    font-size:17px;
+    font-weight:600;
+    padding:13px 14px 13px 7px;
+    font-family:'Inter';
+    width:100%;
+  }
+
+  .pill-group{display:flex;gap:7px;flex-wrap:wrap;}
+  .pill{
+    flex:1;
+    text-align:center;
+    border:1px solid var(--line);
+    background:var(--navy-950);
+    color:var(--ink-dim);
+    padding:10px 8px;
+    border-radius:10px;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .15s;
+  }
+  .pill.active{
+    border-color:var(--gold-500);
+    color:var(--navy-950);
+    background:var(--gold-400);
+  }
+
+  .result-card{
+    text-align:center;
+    padding:30px 22px 26px;
+  }
+  .result-card .label{
+    font-size:12.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:8px;
+  }
+  .result-card .value{
+    font-family:'Playfair Display', serif;
+    font-size:42px;
+    font-weight:700;
+    color:var(--gold-400);
+    line-height:1.1;
+  }
+  .result-card .sub{
+    margin-top:10px;
+    font-size:12.5px;
+    color:var(--ink-dim);
+  }
+  .breakdown{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px dashed var(--line);
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    color:var(--ink-dim);
+  }
+  .breakdown .b{text-align:center;flex:1;}
+  .breakdown .b .v{display:block;color:var(--cream);font-weight:600;font-size:14px;margin-top:3px;}
+
+  .footnote{
+    text-align:center;
+    font-size:11px;
+    color:#5a648a;
+    margin-top:6px;
+    line-height:1.6;
+    padding:0 10px;
+  }
+  .warn{
+    background:rgba(232,196,104,0.08);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:12px;
+    color:var(--gold-400);
+    margin-top:12px;
+    display:none;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="mark">Vitrine Orlando</div>
+  </div>
+  <div class="rule"></div>
+
+  <h1 class="title">Simule o imposto que você<br>vai pagar no Brasil</h1>
+  <p class="tag">Informe o valor do produto e o peso para estimar o imposto de importação (II + ICMS).</p>
+
+  <div class="card">
+    <div class="field">
+      <label>Valor do produto (US$)</label>
+      <div class="input-wrap">
+        <span class="prefix">US$</span>
+        <input type="number" id="valorProduto" step="0.01" min="0" value="100" inputmode="decimal">
+      </div>
+    </div>
+    <div class="field">
+      <label>Peso do produto (kg)</label>
+      <div class="input-wrap">
+        <input type="number" id="peso" step="0.1" min="0" value="2" inputmode="decimal">
+        <span class="prefix" style="padding-right:14px;">kg</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Seu estado (alíquota de ICMS)</label>
+      <div class="pill-group" id="icmsPills">
+        <div class="pill" data-val="17">17%</div>
+        <div class="pill active" data-val="18">18%</div>
+        <div class="pill" data-val="20">20%</div>
+        <div class="pill" data-val="22">22%</div>
+      </div>
+    </div>
+    <div class="warn" id="pesoWarn">Peso acima de 20kg — fale com a Vitrine Orlando para uma simulação exata.</div>
+  </div>
+
+  <div class="card result-card">
+    <div class="label">Imposto estimado a pagar no Brasil</div>
+    <div class="value" id="rFinal">R$ 0,00</div>
+    <div class="sub">Imposto de Importação (II) + ICMS do seu estado</div>
+    <div class="breakdown">
+      <div class="b">II (60%)<span class="v" id="bII">—</span></div>
+      <div class="b">ICMS<span class="v" id="bICMS">—</span></div>
+    </div>
+  </div>
+
+  <p class="footnote">
+    Simulação com cotação de referência do dólar do dia. Valores podem variar conforme câmbio e classificação fiscal no momento do envio.<br>
+    Fale com a Vitrine Orlando para confirmar valores antes de comprar.
+  </p>
+
+</div>
+
+<script>
+// ---- Tabelas internas (não exibidas ao cliente) ----
+const COTACAO_DOLAR = 5.17; // referência — ajuste conforme o dia
+
+const fretePagoTable = [
+  {max:1, val:62}, {max:2, val:77}, {max:3, val:97}, {max:4, val:117},
+  {max:5, val:127}, {max:6, val:140}, {max:7, val:151}, {max:8, val:156}, {max:9, val:174}
+];
+function lookupFretePago(peso){
+  if(peso <= 9){
+    for(const t of fretePagoTable){ if(peso <= t.max) return t.val; }
+  }
+  const extraKg = Math.ceil(peso - 9);
+  return 174 + extraKg * 10;
+}
+
+const freteDeclaradoTable = [
+  {max:0.5, val:16.56}, {max:1, val:21.47}, {max:2, val:23.37}, {max:3, val:23.37},
+  {max:4, val:23.37}, {max:5, val:23.37}, {max:6, val:43.93}, {max:7, val:43.93},
+  {max:8, val:43.93}, {max:9, val:43.93}, {max:10, val:43.93}, {max:11, val:62.62},
+  {max:12, val:62.62}, {max:13, val:62.62}, {max:14, val:62.62}, {max:15, val:62.62},
+  {max:16, val:75.15}, {max:17, val:75.15}, {max:18, val:75.15}, {max:19, val:75.15}, {max:20, val:75.15}
+];
+function lookupFreteDeclarado(peso){
+  for(const t of freteDeclaradoTable){ if(peso <= t.max) return t.val; }
+  return 75.15; // acima de 20kg, usa última faixa como referência
+}
+
+const TAXA_FEDEX = 20.25;
+
+let icmsAliquota = 18;
+const $ = id => document.getElementById(id);
+function fmtBRL(v){ return 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function calcular(){
+  const valorProduto = parseFloat($('valorProduto').value) || 0;
+  const peso = parseFloat($('peso').value) || 0;
+  const aliq = icmsAliquota / 100;
+
+  $('pesoWarn').style.display = (peso > 20) ? 'block' : 'none';
+
+  const fretePago = lookupFretePago(peso);
+  const freteDeclarado = lookupFreteDeclarado(peso);
+
+  const baseII = valorProduto + freteDeclarado;
+  const ii = baseII * 0.6;
+  const baseICMS = (baseII + ii + TAXA_FEDEX) / (1 - aliq);
+  const icms = baseICMS * aliq;
+  const totalImpostos = ii + icms;
+
+  const impostoBRL = totalImpostos * COTACAO_DOLAR;
+  const iiBRL = ii * COTACAO_DOLAR;
+  const icmsBRL = icms * COTACAO_DOLAR;
+
+  $('rFinal').textContent = fmtBRL(impostoBRL);
+  $('bII').textContent = fmtBRL(iiBRL);
+  $('bICMS').textContent = fmtBRL(icmsBRL);
+}
+
+['valorProduto','peso'].forEach(id => $(id).addEventListener('input', calcular));
+document.querySelectorAll('#icmsPills .pill').forEach(p=>{
+  p.addEventListener('click', ()=>{
+    document.querySelectorAll('#icmsPills .pill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+    icmsAliquota = parseFloat(p.dataset.val);
+    calcular();
+  });
+});
+
+calcular();
+</script>
+</body>
+</html>
